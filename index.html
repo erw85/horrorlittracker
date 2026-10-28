@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The Crypt Ledger — Horror Literature Tracker</title>
+  <meta name="description" content="Track the 100 top-ranked horror novels, rate the ones you've survived, and receive recommendations for what to read next.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🕯️</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=UnifrakturMaguntia&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="vignette" aria-hidden="true"></div>
+
+  <header class="masthead">
+    <p class="kicker">Herein lie one hundred dread tomes</p>
+    <h1>The Crypt Ledger</h1>
+    <p class="subtitle">A tracker &amp; oracle for the literature of fear</p>
+    <div class="ornament" aria-hidden="true">✠ ⸺ ☾ ⸺ ✠</div>
+  </header>
+
+  <main>
+    <section class="tally" aria-label="Your progress">
+      <div class="tally-stat"><span id="stat-read">0</span><small>of 100 survived</small></div>
+      <div class="tally-stat"><span id="stat-rated">0</span><small>rated</small></div>
+      <div class="tally-stat"><span id="stat-avg">—</span><small>your average</small></div>
+      <div class="tally-stat"><span id="stat-fav">—</span><small>your darkest craving</small></div>
+      <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progress">
+        <div class="progress-fill" id="progress-fill"></div>
+      </div>
+    </section>
+
+    <section class="oracle" aria-labelledby="oracle-title">
+      <h2 id="oracle-title">The Oracle Whispers…</h2>
+      <p class="oracle-intro" id="oracle-intro">Mark the novels you have read and rate them. The oracle will study your tastes and summon what you should read next.</p>
+      <div class="recs" id="recs" aria-live="polite"></div>
+    </section>
+
+    <section class="catalogue" aria-labelledby="catalogue-title">
+      <div class="catalogue-head">
+        <h2 id="catalogue-title">The Hundred</h2>
+        <p class="hint">Tick a tome you've read, then give it one to five skulls.</p>
+      </div>
+
+      <div class="controls">
+        <label class="field search">
+          <span class="sr-only">Search</span>
+          <input type="search" id="search" placeholder="Search title or author…" autocomplete="off">
+        </label>
+        <label class="field">
+          <span class="sr-only">Show</span>
+          <select id="filter-status">
+            <option value="all">All tomes</option>
+            <option value="unread">Unread</option>
+            <option value="read">Read</option>
+          </select>
+        </label>
+        <label class="field">
+          <span class="sr-only">Theme</span>
+          <select id="filter-tag"><option value="">Every horror</option></select>
+        </label>
+        <label class="field">
+          <span class="sr-only">Sort</span>
+          <select id="sort">
+            <option value="rank">By rank</option>
+            <option value="title">By title</option>
+            <option value="author">By author</option>
+            <option value="year-asc">Oldest first</option>
+            <option value="year-desc">Newest first</option>
+            <option value="rating">By your rating</option>
+          </select>
+        </label>
+      </div>
+
+      <p class="count" id="count" aria-live="polite"></p>
+      <ol class="grid" id="grid"></ol>
+    </section>
+
+    <section class="grimoire" aria-label="Your data">
+      <h2>The Grimoire</h2>
+      <p>Your ledger lives only in this browser. Copy it out to keep it safe, or carry it to another device.</p>
+      <div class="grimoire-actions">
+        <button type="button" class="btn" id="export">Export ledger</button>
+        <label class="btn">Import ledger<input type="file" id="import" accept="application/json" hidden></label>
+        <button type="button" class="btn btn-danger" id="reset">Burn the ledger</button>
+      </div>
+    </section>
+  </main>
+
+  <footer class="colophon">
+    <p>Canon drawn from Goodreads' <a href="https://www.goodreads.com/list/show/135.Best_Horror_Novels" target="_blank" rel="noopener">Best Horror Novels</a> list. Covers courtesy of <a href="https://openlibrary.org" target="_blank" rel="noopener">Open Library</a>.</p>
+    <p class="ornament" aria-hidden="true">☠</p>
+  </footer>
+
+  <template id="card-template">
+    <li class="card">
+      <div class="cover">
+        <div class="cover-fallback"><span class="cf-title"></span><span class="cf-author"></span></div>
+        <img alt="" loading="lazy" hidden>
+        <span class="rank"></span>
+      </div>
+      <div class="card-body">
+        <h3 class="title"></h3>
+        <p class="meta"><span class="author"></span> · <span class="year"></span></p>
+        <ul class="tags"></ul>
+        <div class="card-actions">
+          <label class="read-toggle">
+            <input type="checkbox" class="read-box">
+            <span class="read-label">Mark as read</span>
+          </label>
+          <fieldset class="rating" disabled>
+            <legend class="sr-only">Your rating</legend>
+          </fieldset>
+        </div>
+      </div>
+    </li>
+  </template>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="js/books.js"></script>
+  <script src="js/recommender.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
