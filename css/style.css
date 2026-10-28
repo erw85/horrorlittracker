@@ -206,7 +206,7 @@ h2 {
 .hint { color: var(--ghost-dim); margin: 0; }
 
 .controls {
-  display: grid; grid-template-columns: 2fr repeat(3, 1fr); gap: 10px; margin: 18px 0 10px;
+  display: grid; grid-template-columns: 1.6fr repeat(4, 1fr); gap: 10px; margin: 18px 0 10px;
   position: sticky; top: 0; z-index: 10; padding: 10px 0;
   background: linear-gradient(180deg, var(--night) 75%, transparent);
 }
@@ -284,6 +284,14 @@ h2 {
 .card:not(.is-read) .title { padding-right: 28px; }
 .card .author { margin: 2px 0 0; color: var(--ghost-dim); font-style: italic; }
 .card .author::before { content: "by "; color: var(--muted); }
+.badges { list-style: none; padding: 0; margin: 8px 0 0; display: flex; flex-wrap: wrap; gap: 5px; }
+.badge {
+  font-family: var(--round); font-weight: 600; font-size: .78rem; padding: 1px 9px; border-radius: 8px;
+  color: var(--ink); background: #ffd84a; border: 2px solid var(--ink); cursor: help;
+}
+.badge-jackson { background: #ff9ed1; }
+.badge-choice { background: #7fd6ff; }
+.badge-canon { background: var(--ghost-dim); }
 .tags { list-style: none; padding: 0; margin: 8px 0 10px; display: flex; flex-wrap: wrap; gap: 5px; }
 .tags li {
   font-size: .76rem; font-weight: 700; padding: 1px 9px; border-radius: 99px;
@@ -382,7 +390,7 @@ h2 {
 /* ---------- responsive ---------- */
 @media (max-width: 760px) {
   .tally { grid-template-columns: repeat(2, 1fr); }
-  .controls { grid-template-columns: repeat(3, 1fr); }
+  .controls { grid-template-columns: repeat(2, 1fr); }
   .controls .search { grid-column: 1 / -1; }
   .recs { grid-template-columns: 1fr; }
   .moon { width: 64px; height: 64px; top: 18px; }

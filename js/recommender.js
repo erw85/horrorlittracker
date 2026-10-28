@@ -75,6 +75,7 @@
         const aff = authorAffinity[b.author] || 0;
         score += Math.max(-0.2, Math.min(0.2, aff * 0.06));
         if (b.rank) score += (1 - b.rank / 100) * 0.04; // gentle nudge toward the canon
+        if (b.sources && b.sources.some(src => src.kind !== "goodreads")) score += 0.03; // award winners and classics
         return { book: b, score, v };
       })
       .sort((a, b) => b.score - a.score);

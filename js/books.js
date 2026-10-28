@@ -1,6 +1,8 @@
 /*
- * The canon: 100 top-ranked novels from Goodreads' "Best Horror Novels" Listopia list,
- * plus a "deeper cuts" pool used only for extra recommendations.
+ * Book data, compiled from memory (not fetched live), so details may contain errors.
+ * - TOP: 100 top-ranked novels from Goodreads' "Best Horror Novels" Listopia list.
+ * - EXTRA: "deeper cuts" used for recommendations (shown in the catalogue only if they won an award).
+ * - ADDED: award winners and classic-canon novels outside the top 100.
  * Format: [title, author, year, [tags]]. Rank = position in the array.
  */
 (function () {
@@ -152,16 +154,122 @@
     ["Feed", "Mira Grant", 2010, ["zombies", "apocalyptic", "sci-fi", "thriller"]]
   ];
 
-  const toBook = (row, i, pool) => ({
-    id: (pool === "top" ? "t" : "x") + String(i + 1).padStart(3, "0"),
-    rank: pool === "top" ? i + 1 : null,
-    title: row[0],
-    author: row[1],
-    year: row[2],
-    tags: row[3],
-    pool
-  });
+  // Award winners and classics that aren't in the top 100. Append only: ids come from position.
+  const ADDED = [
+    // Bram Stoker Award, novel
+    ["Mine", "Robert McCammon", 1990, ["psychological", "thriller", "cult"]],
+    ["Blood of the Lamb", "Thomas F. Monteleone", 1992, ["religious", "thriller", "demonic"]],
+    ["The Throat", "Peter Straub", 1993, ["serial-killer", "mystery", "literary", "psychological"]],
+    ["Dead in the Water", "Nancy Holder", 1994, ["ghosts", "isolation", "cursed"]],
+    ["Zombie", "Joyce Carol Oates", 1995, ["serial-killer", "psychological", "literary", "extreme"]],
+    ["Children of the Dusk", "Janet Berliner & George Guthridge", 1997, ["dark-fantasy", "historical", "epic"]],
+    ["Mr. X", "Peter Straub", 1999, ["cosmic", "family", "mystery", "literary"]],
+    ["The Traveling Vampire Show", "Richard Laymon", 2000, ["vampires", "coming-of-age", "small-town"]],
+    ["American Gods", "Neil Gaiman", 2001, ["dark-fantasy", "epic", "literary"]],
+    ["The Night Class", "Tom Piccirilli", 2002, ["ghosts", "mystery", "psychological"]],
+    ["Lost Boy Lost Girl", "Peter Straub", 2003, ["haunted-house", "serial-killer", "grief", "literary"]],
+    ["In the Night Room", "Peter Straub", 2004, ["psychological", "ghosts", "literary"]],
+    ["Creepers", "David Morrell", 2005, ["survival", "thriller", "isolation"]],
+    ["Lisey's Story", "Stephen King", 2006, ["grief", "dark-fantasy", "psychological"]],
+    ["The Missing", "Sarah Langan", 2007, ["small-town", "apocalyptic", "body-horror"]],
+    ["Audrey's Door", "Sarah Langan", 2009, ["haunted-house", "psychological"]],
+    ["Flesh Eaters", "Joe McKinney", 2011, ["zombies", "apocalyptic", "survival"]],
+    ["The Drowning Girl", "Caitlín R. Kiernan", 2012, ["psychological", "ghosts", "literary"]],
+    ["Blood Kin", "Steve Rasnic Tem", 2014, ["southern-gothic", "family", "historical", "cult"]],
+    ["Ararat", "Christopher Golden", 2017, ["demonic", "isolation", "survival", "religious"]],
+    ["Coyote Rage", "Owl Goingback", 2019, ["folk-horror", "monsters", "survival"]],
+    ["Don't Fear the Reaper", "Stephen Graham Jones", 2022, ["slasher", "small-town"]],
+    ["The Reformatory", "Tananarive Due", 2023, ["ghosts", "historical", "childhood", "southern-gothic"]],
+    // Bram Stoker Award, first novel
+    ["The Revelation", "Bentley Little", 1990, ["small-town", "religious", "demonic"]],
+    ["The Rust Maidens", "Gwendolyn Kiste", 2018, ["body-horror", "coming-of-age", "small-town"]],
+    // Shirley Jackson Award, novel
+    ["Generation Loss", "Elizabeth Hand", 2007, ["psychological", "isolation", "mystery", "literary"]],
+    ["The Shadow Year", "Jeffrey Ford", 2008, ["childhood", "coming-of-age", "mystery", "literary"]],
+    ["Big Machine", "Victor LaValle", 2009, ["cult", "cosmic", "literary"]],
+    ["Mr. Shivers", "Robert Jackson Bennett", 2010, ["historical", "dark-fantasy", "survival"]],
+    ["Witches on the Road Tonight", "Sheri Holman", 2011, ["witchcraft", "family", "literary"]],
+    ["American Elsewhere", "Robert Jackson Bennett", 2013, ["cosmic", "small-town", "sci-fi"]],
+    ["The Hole", "Hye-young Pyun", 2017, ["psychological", "isolation", "literary"]],
+    // Goodreads Choice Awards, horror
+    ["The Fireman", "Joe Hill", 2016, ["apocalyptic", "survival", "epic"]],
+    ["Sleeping Beauties", "Stephen King & Owen King", 2017, ["dark-fantasy", "small-town", "epic"]],
+    ["Holly", "Stephen King", 2023, ["serial-killer", "mystery", "thriller"]],
+    // Classic canon
+    ["The Castle of Otranto", "Horace Walpole", 1764, ["gothic", "classic"]],
+    ["The Mysteries of Udolpho", "Ann Radcliffe", 1794, ["gothic", "classic", "mystery"]],
+    ["Melmoth the Wanderer", "Charles Maturin", 1820, ["gothic", "classic", "demonic", "religious"]],
+    ["The Private Memoirs and Confessions of a Justified Sinner", "James Hogg", 1824, ["gothic", "classic", "religious", "psychological"]],
+    ["Uncle Silas", "Sheridan Le Fanu", 1864, ["gothic", "classic", "mystery"]],
+    ["The Great God Pan", "Arthur Machen", 1894, ["cosmic", "classic", "folk-horror"]],
+    ["The Beetle", "Richard Marsh", 1897, ["classic", "monsters", "mystery"]],
+    ["The House on the Borderland", "William Hope Hodgson", 1908, ["cosmic", "classic", "haunted-house", "isolation"]],
+    ["Conjure Wife", "Fritz Leiber", 1943, ["witchcraft", "classic", "psychological"]],
+    ["Our Lady of Darkness", "Fritz Leiber", 1977, ["cosmic", "mystery", "literary"]]
+  ];
+
+  // Where each book's recognition comes from, keyed by title. Years are award years.
+  const AWARDS = {
+    stoker: {
+      "Misery": 1987, "Swan Song": 1987, "The Silence of the Lambs": 1988, "Carrion Comfort": 1989,
+      "Mine": 1990, "Boy's Life": 1991, "Blood of the Lamb": 1992, "The Throat": 1993,
+      "Dead in the Water": 1994, "Zombie": 1995, "The Green Mile": 1996, "Children of the Dusk": 1997,
+      "Bag of Bones": 1998, "Mr. X": 1999, "The Traveling Vampire Show": 2000, "American Gods": 2001,
+      "The Night Class": 2002, "Lost Boy Lost Girl": 2003, "In the Night Room": 2004, "Creepers": 2005,
+      "Lisey's Story": 2006, "The Missing": 2007, "Duma Key": 2008, "Audrey's Door": 2009,
+      "Flesh Eaters": 2011, "The Drowning Girl": 2012, "Doctor Sleep": 2013, "Blood Kin": 2014,
+      "A Head Full of Ghosts": 2015, "The Fisherman": 2016, "Ararat": 2017,
+      "The Cabin at the End of the World": 2018, "Coyote Rage": 2019, "The Only Good Indians": 2020,
+      "My Heart Is a Chainsaw": 2021, "Don't Fear the Reaper": 2022, "The Reformatory": 2023
+    },
+    "stoker-first": {
+      "The Revelation": 1990, "The Cipher": 1991, "Heart-Shaped Box": 2007, "The Rust Maidens": 2018
+    },
+    jackson: {
+      "Generation Loss": 2007, "The Shadow Year": 2008, "Big Machine": 2009, "Mr. Shivers": 2010,
+      "Witches on the Road Tonight": 2011, "American Elsewhere": 2013, "Annihilation": 2014,
+      "Experimental Film": 2015, "The Hole": 2017
+    },
+    choice: {
+      "Doctor Sleep": 2013, "Revival": 2014, "The Fireman": 2016, "Sleeping Beauties": 2017,
+      "The Outsider": 2018, "The Institute": 2019, "Mexican Gothic": 2020,
+      "The Final Girl Support Group": 2021, "Holly": 2023
+    }
+  };
+
+  const CANON = new Set([
+    "The Castle of Otranto", "The Mysteries of Udolpho", "The Monk", "Frankenstein", "Melmoth the Wanderer",
+    "The Private Memoirs and Confessions of a Justified Sinner", "Uncle Silas", "Carmilla",
+    "The Strange Case of Dr. Jekyll and Mr. Hyde", "The Picture of Dorian Gray", "The Great God Pan",
+    "Dracula", "The Beetle", "The Turn of the Screw", "The House on the Borderland", "The Phantom of the Opera",
+    "At the Mountains of Madness", "The Case of Charles Dexter Ward", "Rebecca", "Conjure Wife",
+    "I Am Legend", "Psycho", "The Haunting of Hill House", "We Have Always Lived in the Castle",
+    "Something Wicked This Way Comes", "Rosemary's Baby", "The Exorcist", "The Other", "Hell House",
+    "'Salem's Lot", "Interview with the Vampire", "The Shining", "Our Lady of Darkness", "Ghost Story"
+  ]);
+
+  const PREFIX = { top: "t", extra: "x", added: "a" };
+  const toBook = (row, i, pool) => {
+    const title = row[0];
+    const sources = [];
+    if (pool === "top") sources.push({ kind: "goodreads", rank: i + 1 });
+    for (const kind in AWARDS) if (AWARDS[kind][title]) sources.push({ kind, year: AWARDS[kind][title] });
+    if (CANON.has(title)) sources.push({ kind: "canon" });
+    return {
+      id: PREFIX[pool] + String(i + 1).padStart(3, "0"),
+      rank: pool === "top" ? i + 1 : null,
+      title,
+      author: row[1],
+      year: row[2],
+      tags: row[3],
+      pool,
+      sources,
+      // Shown in the catalogue: the top 100 plus anything with an award or canon place.
+      listed: pool === "top" || sources.length > 0
+    };
+  };
 
   window.HORROR_BOOKS = TOP.map((r, i) => toBook(r, i, "top"));
   window.HORROR_EXTRA = EXTRA.map((r, i) => toBook(r, i, "extra"));
+  window.HORROR_ADDED = ADDED.map((r, i) => toBook(r, i, "added"));
 })();
