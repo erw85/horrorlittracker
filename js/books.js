@@ -6,8 +6,10 @@
  *   Left out: three self-promoted entries with under 1,000 ratings (ranks 39, 70, 85), and
  *   books Goodreads doesn't count as horror (Horror not among their top three genres there:
  *   Rebecca, The Island of Dr. Moreau, The Road, The Day of the Triffids, Lord of the Flies,
- *   Jurassic Park, 11/22/63) plus the Dark Tower fantasy series. The next horror titles fill
- *   their places, so the hundred runs to rank 117.
+ *   Jurassic Park, 11/22/63), the Dark Tower fantasy series, and young-adult or children's
+ *   books (Young Adult, Middle Grade or Childrens among their top Goodreads genres: Flowers in
+ *   the Attic, Coraline, Fear Street, Point Horror, Christopher Pike). The next adult horror
+ *   titles fill their places, so the hundred runs to rank 133.
  * - Goodreads Choice horror winners (2011-2025) were checked on goodreads.com/choiceawards.
  * - Bram Stoker and Shirley Jackson award winners and the classic canon are compiled from
  *   memory and not yet verified; years the compiler was unsure of are left out.
@@ -59,12 +61,10 @@
     { id: "psycho", title: "Psycho", author: "Robert Bloch", year: 1959, tags: ["serial-killer", "psychological", "classic", "slasher"], gr: { rank: 41, avg: 4.13, ratings: 82189 } },
     { id: "the-terror", title: "The Terror", author: "Dan Simmons", year: 2007, tags: ["historical", "survival", "monsters", "isolation"], gr: { rank: 42, avg: 4.09, ratings: 79944 } },
     { id: "the-ruins", title: "The Ruins", author: "Scott Smith", year: 2006, tags: ["survival", "creature", "isolation", "body-horror"], gr: { rank: 43, avg: 3.69, ratings: 73728 } },
-    { id: "flowers-in-the-attic", title: "Flowers in the Attic", author: "V.C. Andrews", year: 1979, tags: ["gothic", "family", "psychological", "childhood"], gr: { rank: 44, avg: 3.86, ratings: 248088 } },
     { id: "rebecca", title: "Rebecca", author: "Daphne du Maurier", year: 1938, tags: ["gothic", "psychological", "classic", "mystery", "literary"] },
     { id: "bag-of-bones", title: "Bag of Bones", author: "Stephen King", year: 1998, tags: ["ghosts", "grief", "small-town", "haunted-house"], gr: { rank: 46, avg: 3.92, ratings: 216341 } },
     { id: "the-witching-hour", title: "The Witching Hour", author: "Anne Rice", year: 1990, tags: ["witchcraft", "gothic", "family", "southern-gothic", "epic"], gr: { rank: 47, avg: 4.09, ratings: 127907 } },
     { id: "horns", title: "Horns", author: "Joe Hill", year: 2010, tags: ["demonic", "dark-fantasy", "grief", "small-town"], gr: { rank: 48, avg: 3.93, ratings: 123081 } },
-    { id: "coraline", title: "Coraline", author: "Neil Gaiman", year: 2002, tags: ["childhood", "dark-fantasy", "monsters", "family"], gr: { rank: 49, avg: 4.13, ratings: 810637 } },
     { id: "the-turn-of-the-screw", title: "The Turn of the Screw", author: "Henry James", year: 1898, tags: ["ghosts", "classic", "psychological", "childhood", "gothic"], gr: { rank: 50, avg: 3.38, ratings: 190559 } },
     { id: "the-tommyknockers", title: "The Tommyknockers", author: "Stephen King", year: 1987, tags: ["sci-fi", "small-town", "body-horror", "cosmic"], gr: { rank: 51, avg: 3.61, ratings: 170068 } },
     { id: "the-passage", title: "The Passage", author: "Justin Cronin", year: 2010, tags: ["vampires", "apocalyptic", "epic", "sci-fi"], gr: { rank: 52, avg: 4.05, ratings: 227787 } },
@@ -120,7 +120,7 @@
     { id: "the-little-stranger", title: "The Little Stranger", author: "Sarah Waters", year: 2009, tags: ["haunted-house", "historical", "literary", "psychological"] },
     { id: "dark-matter", title: "Dark Matter", author: "Michelle Paver", year: 2010, tags: ["ghosts", "isolation", "historical", "survival"] },
     { id: "the-historian", title: "The Historian", author: "Elizabeth Kostova", year: 2005, tags: ["vampires", "historical", "mystery", "literary"] },
-    { id: "a-head-full-of-ghosts", title: "A Head Full of Ghosts", author: "Paul Tremblay", year: 2015, tags: ["possession", "psychological", "family", "religious"] },
+    { id: "a-head-full-of-ghosts", title: "A Head Full of Ghosts", author: "Paul Tremblay", year: 2015, tags: ["possession", "psychological", "family", "religious"], gr: { rank: 130, avg: 3.77, ratings: 114912 } },
     { id: "the-cabin-at-the-end-of-the-world", title: "The Cabin at the End of the World", author: "Paul Tremblay", year: 2018, tags: ["psychological", "apocalyptic", "religious", "family", "isolation"] },
     { id: "the-only-good-indians", title: "The Only Good Indians", author: "Stephen Graham Jones", year: 2020, tags: ["folk-horror", "literary", "monsters", "cursed"] },
     { id: "my-heart-is-a-chainsaw", title: "My Heart Is a Chainsaw", author: "Stephen Graham Jones", year: 2021, tags: ["slasher", "coming-of-age", "small-town"] },
@@ -215,7 +215,7 @@
     { id: "our-share-of-night", title: "Our Share of Night", author: "Mariana Enríquez", year: 2019, tags: ["cult", "family", "epic", "literary", "body-horror"] },
     { id: "penpal", title: "Penpal", author: "Dathan Auerbach", year: 2012, tags: ["childhood", "psychological", "mystery"] },
     { id: "kill-creek", title: "Kill Creek", author: "Scott Thomas", year: 2017, tags: ["haunted-house", "ghosts", "extreme"] },
-    { id: "the-ritual", title: "The Ritual", author: "Adam Nevill", year: 2011, tags: ["folk-horror", "survival", "isolation", "cult"] },
+    { id: "the-ritual", title: "The Ritual", author: "Adam Nevill", year: 2011, tags: ["folk-horror", "survival", "isolation", "cult"], gr: { rank: 133, avg: 3.55, ratings: 38473 } },
     { id: "last-days", title: "Last Days", author: "Adam Nevill", year: 2012, tags: ["cult", "ghosts", "mystery"] },
     { id: "bunny", title: "Bunny", author: "Mona Awad", year: 2019, tags: ["psychological", "witchcraft", "humor", "literary"] },
     { id: "the-fervor", title: "The Fervor", author: "Alma Katsu", year: 2022, tags: ["historical", "folk-horror", "family"] },
@@ -238,12 +238,12 @@
     { id: "you-like-it-darker", title: "You Like It Darker", author: "Stephen King", year: 2024, tags: ["psychological", "dark-fantasy", "thriller"] },
     { id: "witchcraft-for-wayward-girls", title: "Witchcraft for Wayward Girls", author: "Grady Hendrix", year: 2025, tags: ["witchcraft", "coming-of-age", "historical", "humor"] },
     { id: "the-wolfs-hour", title: "The Wolf's Hour", author: "Robert McCammon", year: 1989, tags: ["werewolves", "historical", "thriller"], gr: { rank: 106, avg: 4.09, ratings: 12572 } },
-    { id: "whisper-of-death", title: "Whisper of Death", author: "Christopher Pike", year: 1991, tags: ["coming-of-age", "mystery", "apocalyptic"], gr: { rank: 107, avg: 3.81, ratings: 3683 } },
     { id: "lightning", title: "Lightning", author: "Dean Koontz", year: 1988, tags: ["sci-fi", "thriller"], gr: { rank: 109, avg: 4.09, ratings: 66590 } },
     { id: "strangers", title: "Strangers", author: "Dean Koontz", year: 1986, tags: ["sci-fi", "mystery", "psychological", "thriller"], gr: { rank: 110, avg: 4.02, ratings: 48448 } },
-    { id: "the-face", title: "The Face", author: "R.L. Stine", year: 1996, tags: ["coming-of-age", "mystery", "psychic"], gr: { rank: 114, avg: 3.74, ratings: 2112 } },
-    { id: "the-wrong-number", title: "The Wrong Number", author: "R.L. Stine", year: 1990, tags: ["coming-of-age", "thriller", "serial-killer"], gr: { rank: 116, avg: 3.7, ratings: 7397 } },
-    { id: "the-prom-queen", title: "The Prom Queen", author: "R.L. Stine", year: 1992, tags: ["coming-of-age", "slasher", "mystery"], gr: { rank: 117, avg: 3.71, ratings: 5980 } }
+    { id: "john-dies-at-the-end", title: "John Dies at the End", author: "David Wong", year: 2007, tags: ["humor", "cosmic", "body-horror", "dark-fantasy"], gr: { rank: 121, avg: 3.85, ratings: 88070 } },
+    { id: "the-fog", title: "The Fog", author: "James Herbert", year: 1975, tags: ["apocalyptic", "psychological", "extreme"], gr: { rank: 122, avg: 3.87, ratings: 28535 } },
+    { id: "joyland", title: "Joyland", author: "Stephen King", year: 2013, tags: ["ghosts", "mystery", "coming-of-age", "serial-killer"], gr: { rank: 124, avg: 3.92, ratings: 188929 } },
+    { id: "twilight-eyes", title: "Twilight Eyes", author: "Dean Koontz", year: 1985, tags: ["monsters", "psychic", "thriller"], gr: { rank: 132, avg: 3.93, ratings: 28388 } }
   ];
 
   // Where each book's recognition comes from, keyed by title. Years are award years.
