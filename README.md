@@ -1,4 +1,4 @@
-# The Crypt Ledger
+# Survived
 
 A dark gothic tracker and recommender for horror literature. It runs entirely in the browser, so it works on GitHub Pages with no build step.
 

@@ -282,10 +282,10 @@
 
   // ---------- grimoire: export / import / reset ----------
   $("export").addEventListener("click", () => {
-    const blob = new Blob([JSON.stringify({ app: "crypt-ledger", version: 1, ...state }, null, 2)], { type: "application/json" });
+    const blob = new Blob([JSON.stringify({ app: "survived", version: 1, ...state }, null, 2)], { type: "application/json" });
     const a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
-    a.download = "crypt-ledger.json";
+    a.download = "survived-ledger.json";
     a.click();
     setTimeout(() => URL.revokeObjectURL(a.href), 1000);
   });
