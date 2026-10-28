@@ -5,43 +5,51 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Survived — Horror Literature Tracker</title>
   <meta name="description" content="Track the 100 top-ranked horror novels, rate the ones you've survived, and receive recommendations for what to read next.">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🕯️</text></svg>">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎃</text></svg>">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=UnifrakturMaguntia&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=5">
+  <link href="https://fonts.googleapis.com/css2?family=Creepster&family=Fredoka:wght@500;600;700&family=Nunito:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css?v=6">
 </head>
 <body>
-  <div class="vignette" aria-hidden="true"></div>
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="bat" viewBox="0 0 120 50">
+      <path d="M60 14c2-5 4-7 5-7l1 6c3-1 5-1 7 1 8-9 22-13 40-10-7 4-10 10-9 18-7-4-15-3-20 3-4-4-11-4-15 1-3-2-6-1-9 3-3-4-6-5-9-3-4-5-11-5-15-1-5-6-13-7-20-3 1-8-2-14-9-18 18-3 32 1 40 10 2-2 4-2 7-1l1-6c1 0 3 2 5 7z"/>
+    </symbol>
+  </svg>
 
   <header class="masthead">
-    <p class="kicker">Herein lie one hundred dread tomes</p>
-    <h1>Survived</h1>
-    <p class="subtitle">A tracker &amp; oracle for the literature of fear</p>
-    <div class="ornament" aria-hidden="true">✠ ⸺ ☾ ⸺ ✠</div>
+    <div class="moon" aria-hidden="true"></div>
+    <svg class="bat bat-1" aria-hidden="true"><use href="#bat"/></svg>
+    <svg class="bat bat-2" aria-hidden="true"><use href="#bat"/></svg>
+    <svg class="bat bat-3" aria-hidden="true"><use href="#bat"/></svg>
+    <div class="spider" aria-hidden="true"><span class="spider-thread"></span><span class="spider-body">🕷️</span></div>
+    <p class="kicker">100 books that go bump in the night</p>
+    <h1>Survived<span class="ghost" aria-hidden="true">👻</span></h1>
+    <p class="subtitle">Track the scary books you've lived through. Get spooky picks for what to read next.</p>
   </header>
 
   <main>
     <section class="tally" aria-label="Your progress">
       <div class="tally-stat"><span id="stat-read">0</span><small>of 100 survived</small></div>
       <div class="tally-stat"><span id="stat-rated">0</span><small>rated</small></div>
-      <div class="tally-stat"><span id="stat-avg">—</span><small>your average</small></div>
-      <div class="tally-stat"><span id="stat-fav">—</span><small>your darkest craving</small></div>
+      <div class="tally-stat"><span id="stat-avg">—</span><small>avg pumpkins</small></div>
+      <div class="tally-stat"><span id="stat-fav">—</span><small>favorite fright</small></div>
       <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progress">
         <div class="progress-fill" id="progress-fill"></div>
       </div>
     </section>
 
     <section class="oracle" aria-labelledby="oracle-title">
-      <h2 id="oracle-title">The Oracle Whispers…</h2>
-      <p class="oracle-intro" id="oracle-intro">Mark the novels you have read and rate them. The oracle will study your tastes and summon what you should read next.</p>
+      <h2 id="oracle-title">The Crystal Ball <span aria-hidden="true">🔮</span></h2>
+      <p class="oracle-intro" id="oracle-intro">Mark the books you've read and rate them. The crystal ball will peek at your tastes and conjure up what to read next.</p>
       <div class="recs" id="recs" aria-live="polite"></div>
     </section>
 
     <section class="catalogue" aria-labelledby="catalogue-title">
       <div class="catalogue-head">
-        <h2 id="catalogue-title">The Hundred</h2>
-        <p class="hint">Tick a tome you've read, then give it one to five skulls.</p>
+        <h2 id="catalogue-title">The Spooky Hundred</h2>
+        <p class="hint">Check off the books you've read, then give each one 1 to 5 pumpkins.</p>
       </div>
 
       <div class="controls">
@@ -52,14 +60,14 @@
         <label class="field">
           <span class="sr-only">Show</span>
           <select id="filter-status">
-            <option value="all">All tomes</option>
+            <option value="all">All books</option>
             <option value="unread">Unread</option>
             <option value="read">Read</option>
           </select>
         </label>
         <label class="field">
           <span class="sr-only">Theme</span>
-          <select id="filter-tag"><option value="">Every horror</option></select>
+          <select id="filter-tag"><option value="">Every kind of scary</option></select>
         </label>
         <label class="field">
           <span class="sr-only">Sort</span>
@@ -76,23 +84,23 @@
 
       <p class="count" id="count" aria-live="polite"></p>
       <ol class="grid" id="grid"></ol>
-      <p class="load-error" id="load-error" hidden>The tomes failed to rise. Please refresh the page (on a phone, close and reopen the tab). If they still don't appear, clear this site's cached files.</p>
+      <p class="load-error" id="load-error" hidden>Eek! The books didn't load. Refresh the page (on a phone, close and reopen the tab). Still nothing? Clear this site's cached files.</p>
     </section>
 
     <section class="grimoire" aria-label="Your data">
-      <h2>The Grimoire</h2>
-      <p>Your ledger lives only in this browser. Copy it out to keep it safe, or carry it to another device.</p>
+      <h2>Your Stash <span aria-hidden="true">🪦</span></h2>
+      <p>Your progress is saved in this browser only. Export it to keep a backup or move it to another device.</p>
       <div class="grimoire-actions">
-        <button type="button" class="btn" id="export">Export ledger</button>
-        <label class="btn">Import ledger<input type="file" id="import" accept="application/json" hidden></label>
-        <button type="button" class="btn btn-danger" id="reset">Burn the ledger</button>
+        <button type="button" class="btn" id="export">Export progress</button>
+        <label class="btn">Import progress<input type="file" id="import" accept="application/json" hidden></label>
+        <button type="button" class="btn btn-danger" id="reset">Bury it all</button>
       </div>
     </section>
   </main>
 
   <footer class="colophon">
     <p>Canon drawn from Goodreads' <a href="https://www.goodreads.com/list/show/135.Best_Horror_Novels" target="_blank" rel="noopener">Best Horror Novels</a> list.</p>
-    <p class="ornament" aria-hidden="true">☠</p>
+    <p class="ornament" aria-hidden="true">🎃 👻 🦇</p>
   </footer>
 
   <template id="card-template">
@@ -118,8 +126,8 @@
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-  <script src="js/books.js?v=5"></script>
-  <script src="js/recommender.js?v=5"></script>
-  <script src="js/app.js?v=5"></script>
+  <script src="js/books.js?v=6"></script>
+  <script src="js/recommender.js?v=6"></script>
+  <script src="js/app.js?v=6"></script>
 </body>
 </html>

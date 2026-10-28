@@ -5,8 +5,8 @@
   const TOP = window.HORROR_BOOKS;
   const ALL = [...TOP, ...window.HORROR_EXTRA];
   const BY_ID = Object.fromEntries(ALL.map(b => [b.id, b]));
-  const SKULL = "☠︎";
-  const RATING_WORDS = ["", "Dreadful", "Unsettling", "Haunting", "Terrifying", "Soul-shattering"];
+  const PUMPKIN = "🎃";
+  const RATING_WORDS = ["", "Snooze", "Mildly creepy", "Spooky", "Scary good", "Screamed out loud"];
 
   // ---------- storage (always guarded: private mode can throw) ----------
   function load(key, fallback) {
@@ -64,7 +64,7 @@
   function buildCard(book) {
     const node = tpl.content.firstElementChild.cloneNode(true);
     node.dataset.id = book.id;
-    setText(node, ".rank", `№ ${book.rank}`);
+    setText(node, ".rank", `#${book.rank}`);
     setText(node, ".rank-ghost", book.rank);
     setText(node, ".title", book.title);
     setText(node, ".author", book.author);
@@ -98,7 +98,7 @@
       const label = document.createElement("label");
       label.htmlFor = id;
       label.title = `${i} — ${RATING_WORDS[i]}`;
-      label.innerHTML = `<span aria-hidden="true">${SKULL}</span><span class="sr-only">${i} of 5</span>`;
+      label.innerHTML = `<span aria-hidden="true">${PUMPKIN}</span><span class="sr-only">${i} of 5</span>`;
       input.addEventListener("change", () => {
         state.reads[book.id] = { rating: i };
         persist();
@@ -128,7 +128,7 @@
     const read = !!entry;
     node.classList.toggle("is-read", read);
     node.querySelector(".read-box").checked = read;
-    node.querySelector(".read-label").textContent = read ? "Survived" : "Mark as read";
+    node.querySelector(".read-label").textContent = read ? "Survived!" : "Mark as read";
     const fs = node.querySelector(".rating");
     fs.disabled = !read;
     fs.querySelectorAll("input").forEach(inp => (inp.checked = read && Number(inp.value) === entry.rating));
@@ -184,7 +184,7 @@
     $("stat-read").textContent = entries.length;
     $("stat-rated").textContent = rated.length;
     $("stat-avg").textContent = rated.length
-      ? (rated.reduce((s, [, e]) => s + e.rating, 0) / rated.length).toFixed(1) + " " + SKULL
+      ? (rated.reduce((s, [, e]) => s + e.rating, 0) / rated.length).toFixed(1) + " " + PUMPKIN
       : "—";
     const tagScore = {};
     Object.entries(state.reads).forEach(([id, e]) => {
@@ -204,10 +204,10 @@
     recsEl.replaceChildren();
 
     const messages = {
-      empty: "Mark the novels you have read and rate them. The oracle will study your tastes and summon what you should read next.",
-      "no-likes": "The oracle senses only disdain. Rate a book you enjoyed (three skulls or more) and it will find you kindred horrors.",
-      "no-match": "You have exhausted every tome the oracle knows. Restore dismissed books from the button below to see them again.",
-      ok: `Drawn from your ${Object.keys(state.reads).length} read ${Object.keys(state.reads).length === 1 ? "tome" : "tomes"}. Rate more to sharpen the vision.`
+      empty: "Mark the books you've read and rate them. The crystal ball will peek at your tastes and conjure up what to read next.",
+      "no-likes": "Yikes, nothing you've rated was a hit! Give a book you liked 3 pumpkins or more and the crystal ball will find you more like it.",
+      "no-match": "You've read everything the crystal ball knows about! Bring back the books you skipped with the button below.",
+      ok: `Based on the ${Object.keys(state.reads).length} ${Object.keys(state.reads).length === 1 ? "book" : "books"} you've survived. Rate more for sharper picks.`
     };
     intro.textContent = messages[reason];
 
@@ -217,7 +217,7 @@
       const restore = document.createElement("button");
       restore.type = "button";
       restore.className = "btn btn-ghost restore";
-      restore.textContent = `Restore ${state.dismissed.length} dismissed`;
+      restore.textContent = `Bring back ${state.dismissed.length} skipped`;
       restore.addEventListener("click", () => { state.dismissed = []; persist(); refresh(); });
       recsEl.appendChild(restore);
     }
@@ -229,16 +229,16 @@
     el.className = "rec";
     el.dataset.id = b.id;
     const because = p.because
-      ? `Because you ${p.because.entry.rating ? `gave <em>${esc(p.because.book.title)}</em> ${p.because.entry.rating} ${SKULL}` : `read <em>${esc(p.because.book.title)}</em>`}.`
+      ? `Because you ${p.because.entry.rating ? `gave <em>${esc(p.because.book.title)}</em> ${p.because.entry.rating} ${PUMPKIN}` : `read <em>${esc(p.because.book.title)}</em>`}.`
       : "";
     el.innerHTML = `
       <div class="rec-body">
-        <p class="rec-source">${b.rank ? `№ ${b.rank} of the Hundred` : "A deeper cut, beyond the Hundred"}</p>
+        <p class="rec-source">${b.rank ? `#${b.rank} in the Spooky Hundred` : "Bonus pick from beyond the Hundred"}</p>
         <h3>${esc(b.title)}</h3>
         <p class="author">${esc(b.author)} <span class="year">· ${b.year}</span></p>
-        <div class="match" aria-label="${p.match}% kinship with your tastes"><span style="width:${p.match}%"></span></div>
-        <p class="match-label">${p.match}% kinship</p>
-        <p class="why">${p.sharedTags.length ? `Steeped in ${p.sharedTags.map(t => `<strong>${esc(pretty(t))}</strong>`).join(", ")}. ` : ""}${because}</p>
+        <div class="match" aria-label="${p.match}% spooky match with your tastes"><span style="width:${p.match}%"></span></div>
+        <p class="match-label">${p.match}% spooky match</p>
+        <p class="why">${p.sharedTags.length ? `Packed with ${p.sharedTags.map(t => `<strong>${esc(pretty(t))}</strong>`).join(", ")}. ` : ""}${because}</p>
         <div class="rec-actions">
           <button type="button" class="btn btn-small" data-act="read">I've read it</button>
           <button type="button" class="btn btn-small btn-ghost" data-act="dismiss">Not for me</button>
@@ -249,7 +249,7 @@
       persist();
       syncCard(b.id);
       refresh();
-      toast(b.pool === "top" ? `Marked “${b.title}” as read — rate it in the Hundred below.` : `Marked “${b.title}” as read.`);
+      toast(b.pool === "top" ? `Marked “${b.title}” as read — rate it in the Spooky Hundred below.` : `Marked “${b.title}” as read.`);
       if (b.pool === "top") {
         statusEl.value = "all"; tagEl.value = ""; searchEl.value = "";
         applyFilters();
@@ -298,18 +298,18 @@
       persist();
       TOP.forEach(b => syncCard(b.id));
       refresh();
-      toast("Ledger restored from the grimoire.");
-    }).catch(() => toast("That file is not a ledger the oracle can read."))
+      toast("It's alive! Your progress is back.");
+    }).catch(() => toast("Hmm, that file isn't a Survived save."))
       .finally(() => (e.target.value = ""));
   });
 
   $("reset").addEventListener("click", () => {
-    if (!confirm("Burn your ledger? Every mark and rating will be lost.")) return;
+    if (!confirm("Bury all your progress? Every check and rating will be gone for good.")) return;
     state = { reads: {}, dismissed: [] };
     persist();
     TOP.forEach(b => syncCard(b.id));
     refresh();
-    toast("The ledger is ash.");
+    toast("Buried. Rest in peace, reading list. 🪦");
   });
 
   function refresh() {
