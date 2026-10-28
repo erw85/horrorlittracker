@@ -2,7 +2,6 @@
   "use strict";
 
   const STORE_KEY = "crypt-ledger:v1";
-  const COVER_KEY = "crypt-ledger:covers:v2";
   const TOP = window.HORROR_BOOKS;
   const ALL = [...TOP, ...window.HORROR_EXTRA];
   const BY_ID = Object.fromEntries(ALL.map(b => [b.id, b]));
@@ -19,6 +18,9 @@
   function save(key, value) {
     try { localStorage.setItem(key, JSON.stringify(value)); } catch { /* storage unavailable */ }
   }
+
+  // Covers were dropped; clear any cached lookups older versions left behind.
+  try { ["crypt-ledger:covers:v1", "crypt-ledger:covers:v2"].forEach(k => localStorage.removeItem(k)); } catch { /* ignore */ }
 
   let state = sanitize(load(STORE_KEY, null));
   function sanitize(s) {
@@ -58,9 +60,8 @@
   function buildCard(book) {
     const node = tpl.content.firstElementChild.cloneNode(true);
     node.dataset.id = book.id;
-    node.querySelector(".rank").textContent = book.rank ? `№ ${book.rank}` : "Deep cut";
-    node.querySelector(".cf-title").textContent = book.title;
-    node.querySelector(".cf-author").textContent = book.author;
+    node.querySelector(".rank").textContent = `№ ${book.rank}`;
+    node.querySelector(".rank-ghost").textContent = book.rank;
     node.querySelector(".title").textContent = book.title;
     node.querySelector(".author").textContent = book.author;
     node.querySelector(".year").textContent = book.year;
@@ -113,7 +114,6 @@
     fs.append(clear);
 
     cards.set(book.id, node);
-    coverObserver.observe(node);
     return node;
   }
 
@@ -131,125 +131,7 @@
     fs.querySelector(".rating-clear").hidden = !(read && entry.rating);
   }
 
-  // ---------- covers (Open Library, then Google Books; lazy and cached) ----------
-  const MISS_RETRY_MS = 3 * 24 * 60 * 60 * 1000;
-  const coverCache = load(COVER_KEY, {});   // { bookId: { src: url|null, t: timestamp } }
-  const coverQueue = [];
-  const coverPending = new Set();
-  let coverActive = 0;
-
-  const coverObserver = "IntersectionObserver" in window
-    ? new IntersectionObserver(entries => {
-        entries.forEach(e => {
-          if (!e.isIntersecting) return;
-          coverObserver.unobserve(e.target);
-          requestCover(e.target);
-        });
-      }, { rootMargin: "400px" })
-    : { observe: n => requestCover(n), unobserve() {} };
-
-  function applyCover(node, src) {
-    if (!src) return;
-    const img = node.querySelector(".cover img");
-    if (!img || img.dataset.src === src) return;
-    img.dataset.src = src;
-    img.referrerPolicy = "no-referrer";
-    img.alt = `Cover of ${BY_ID[node.dataset.id].title}`;
-    img.onload = () => { img.hidden = false; node.classList.add("has-cover"); };
-    img.onerror = () => { img.hidden = true; node.classList.remove("has-cover"); };
-    img.src = src;
-  }
-
-  function applyEverywhere(id) {
-    const entry = coverCache[id];
-    document.querySelectorAll(`[data-id="${id}"]`).forEach(n => applyCover(n, entry && entry.src));
-  }
-
-  function requestCover(node) {
-    const id = node.dataset.id;
-    const entry = coverCache[id];
-    if (entry && (entry.src || Date.now() - entry.t < MISS_RETRY_MS)) return applyCover(node, entry.src);
-    if (coverPending.has(id)) return;
-    coverPending.add(id);
-    coverQueue.push(id);
-    pumpCovers();
-  }
-
-  function pumpCovers() {
-    while (coverActive < 4 && coverQueue.length) {
-      const id = coverQueue.shift();
-      coverActive++;
-      findCover(BY_ID[id])
-        .then(src => {
-          coverCache[id] = { src, t: Date.now() };
-          save(COVER_KEY, coverCache);
-          applyEverywhere(id);
-        })
-        .catch(() => { /* network trouble: keep the title card, try again next visit */ })
-        .finally(() => { coverPending.delete(id); coverActive--; pumpCovers(); });
-    }
-  }
-
-  const normTitle = t => t.toLowerCase()
-    .replace(/[\u2018\u2019']/g, "")
-    .replace(/[^a-z0-9]+/g, " ")
-    .replace(/^(the|a|an) /, "")
-    .trim();
-  const firstAuthor = a => a.split("&")[0].trim();
-  const lastName = a => firstAuthor(a).split(" ").pop();
-
-  // Try each source in turn; a source "wins" only if its image actually loads.
-  async function findCover(book) {
-    let networkOk = false;
-    for (const source of [openLibraryCover, googleBooksCover]) {
-      try {
-        const src = await source(book);
-        networkOk = true;
-        if (src && await imageLoads(src)) return src;
-      } catch { /* try the next source */ }
-    }
-    if (!networkOk) throw new Error("offline");
-    return null;
-  }
-
-  async function openLibraryCover(book) {
-    const url = "https://openlibrary.org/search.json?" + new URLSearchParams({
-      title: book.title, author: firstAuthor(book.author), limit: "10", fields: "title,cover_i,edition_count"
-    });
-    const r = await fetch(url);
-    if (!r.ok) throw new Error(r.status);
-    const docs = ((await r.json()).docs || []).filter(d => d.cover_i);
-    const want = normTitle(book.title);
-    const exact = docs.filter(d => normTitle(d.title || "") === want)
-      .sort((a, b) => (b.edition_count || 0) - (a.edition_count || 0));
-    const hit = exact[0] || docs[0];
-    return hit ? `https://covers.openlibrary.org/b/id/${hit.cover_i}-M.jpg?default=false` : null;
-  }
-
-  async function googleBooksCover(book) {
-    const q = `intitle:"${book.title.replace(/"/g, "")}" inauthor:${lastName(book.author)}`;
-    const url = "https://www.googleapis.com/books/v1/volumes?" + new URLSearchParams({
-      q, maxResults: "10", printType: "books", fields: "items(volumeInfo(title,imageLinks))"
-    });
-    const r = await fetch(url);
-    if (!r.ok) throw new Error(r.status);
-    const items = ((await r.json()).items || []).map(i => i.volumeInfo).filter(v => v.imageLinks);
-    const want = normTitle(book.title);
-    const hit = items.find(v => normTitle(v.title || "") === want) || items[0];
-    if (!hit) return null;
-    const link = hit.imageLinks.thumbnail || hit.imageLinks.smallThumbnail;
-    return link.replace(/^http:/, "https:").replace("&edge=curl", "");
-  }
-
-  function imageLoads(src) {
-    return new Promise(resolve => {
-      const img = new Image();
-      img.referrerPolicy = "no-referrer";
-      img.onload = () => resolve(img.naturalWidth > 10 && img.naturalHeight > 10);
-      img.onerror = () => resolve(false);
-      img.src = src;
-    });
-  }
+  const lastName = a => a.split("&")[0].trim().split(" ").pop();
 
   // ---------- catalogue rendering ----------
   TOP.forEach(b => grid.appendChild(buildCard(b)));
@@ -341,14 +223,10 @@
       ? `Because you ${p.because.entry.rating ? `gave <em>${esc(p.because.book.title)}</em> ${p.because.entry.rating} ${SKULL}` : `read <em>${esc(p.because.book.title)}</em>`}.`
       : "";
     el.innerHTML = `
-      <div class="cover rec-cover">
-        <div class="cover-fallback"><span class="cf-title">${esc(b.title)}</span><span class="cf-author">${esc(b.author)}</span></div>
-        <img alt="" hidden>
-      </div>
       <div class="rec-body">
         <p class="rec-source">${b.rank ? `№ ${b.rank} of the Hundred` : "A deeper cut, beyond the Hundred"}</p>
         <h3>${esc(b.title)}</h3>
-        <p class="meta">${esc(b.author)} · ${b.year}</p>
+        <p class="author">${esc(b.author)} <span class="year">· ${b.year}</span></p>
         <div class="match" aria-label="${p.match}% kinship with your tastes"><span style="width:${p.match}%"></span></div>
         <p class="match-label">${p.match}% kinship</p>
         <p class="why">${p.sharedTags.length ? `Steeped in ${p.sharedTags.map(t => `<strong>${esc(pretty(t))}</strong>`).join(", ")}. ` : ""}${because}</p>
@@ -377,7 +255,6 @@
       persist();
       refresh();
     });
-    requestCover(el);
     return el;
   }
 

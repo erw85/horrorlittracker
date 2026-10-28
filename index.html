@@ -90,20 +90,17 @@
   </main>
 
   <footer class="colophon">
-    <p>Canon drawn from Goodreads' <a href="https://www.goodreads.com/list/show/135.Best_Horror_Novels" target="_blank" rel="noopener">Best Horror Novels</a> list. Covers courtesy of <a href="https://openlibrary.org" target="_blank" rel="noopener">Open Library</a>.</p>
+    <p>Canon drawn from Goodreads' <a href="https://www.goodreads.com/list/show/135.Best_Horror_Novels" target="_blank" rel="noopener">Best Horror Novels</a> list.</p>
     <p class="ornament" aria-hidden="true">☠</p>
   </footer>
 
   <template id="card-template">
     <li class="card">
-      <div class="cover">
-        <div class="cover-fallback"><span class="cf-title"></span><span class="cf-author"></span></div>
-        <img alt="" loading="lazy" hidden>
-        <span class="rank"></span>
-      </div>
+      <span class="rank-ghost" aria-hidden="true"></span>
       <div class="card-body">
+        <p class="card-head"><span class="rank"></span><span class="year"></span></p>
         <h3 class="title"></h3>
-        <p class="meta"><span class="author"></span> · <span class="year"></span></p>
+        <p class="author"></p>
         <ul class="tags"></ul>
         <div class="card-actions">
           <label class="read-toggle">

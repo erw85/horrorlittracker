@@ -118,17 +118,21 @@ h2 {
 .oracle-intro { color: var(--bone-dim); font-style: italic; margin: 0 0 20px; max-width: 70ch; }
 .recs { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
 .rec {
-  display: grid; grid-template-columns: 110px 1fr; gap: 16px;
-  padding: 16px; background: var(--bg-2); border: 1px solid var(--line); border-radius: 4px;
+  padding: 18px 20px; border-left: 3px solid var(--blood) !important; background: var(--bg-2); border: 1px solid var(--line); border-radius: 4px;
   animation: rise .6s ease both;
 }
 .rec:nth-child(2) { animation-delay: .1s; }
 .rec:nth-child(3) { animation-delay: .2s; }
 @keyframes rise { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: reduce) { .rec { animation: none; } }
-.rec h3 { font-family: var(--display); font-size: 1.15rem; margin: 2px 0 2px; line-height: 1.25; }
+.rec h3 {
+  font-family: var(--display); font-weight: 700; margin: 4px 0 2px; line-height: 1.15;
+  font-size: clamp(1.45rem, 2.6vw, 1.85rem); text-wrap: balance;
+  text-shadow: 0 0 16px rgba(212, 49, 59, .35), 0 2px 6px #000;
+}
 .rec-source { margin: 0; font-size: .8rem; letter-spacing: .12em; text-transform: uppercase; color: var(--ember); }
-.rec .meta { margin: 0 0 10px; color: var(--ash); font-style: italic; }
+.rec .author { margin: 0 0 12px; color: var(--bone-dim); font-style: italic; }
+.rec .author .year { color: var(--ash); }
 .match { height: 4px; background: #000; border-radius: 2px; overflow: hidden; }
 .match span { display: block; height: 100%; background: linear-gradient(90deg, var(--blood), var(--blood-bright)); }
 .match-label { font-size: .85rem; color: var(--ash); margin: 4px 0 8px; }
@@ -162,62 +166,59 @@ h2 {
 
 .grid {
   list-style: none; margin: 0; padding: 0;
-  display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px;
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 16px;
 }
 .card {
-  display: flex; flex-direction: column;
-  background: linear-gradient(180deg, var(--panel-2), var(--panel));
-  border: 1px solid var(--line); border-radius: 4px; overflow: hidden;
+  position: relative; overflow: hidden; display: flex;
+  background:
+    radial-gradient(ellipse at 0% 0%, rgba(158,27,34,.14), transparent 60%),
+    linear-gradient(180deg, var(--panel-2), var(--panel));
+  border: 1px solid var(--line); border-left: 3px solid #4a1c21; border-radius: 4px;
   box-shadow: 0 8px 22px var(--shadow);
   transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease;
 }
-.card:hover { transform: translateY(-3px); border-color: #5a343a; box-shadow: 0 14px 30px var(--shadow), 0 0 18px rgba(158,27,34,.18); }
-.card.is-read { border-color: var(--blood); }
+.card:hover { transform: translateY(-2px); border-color: #5a343a; border-left-color: var(--blood-bright); box-shadow: 0 14px 30px var(--shadow), 0 0 18px rgba(158,27,34,.18); }
+.card.is-read { border-color: var(--blood); border-left-color: var(--blood-bright); }
 .card.flash { box-shadow: 0 0 0 2px var(--blood-bright), 0 0 30px var(--blood-bright); }
 
-/* covers */
-.cover { position: relative; aspect-ratio: 2 / 3; background: #050304; overflow: hidden; }
-.rec-cover { aspect-ratio: 2 / 3; border: 1px solid var(--line); }
-.cover img {
-  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
-  filter: sepia(.25) saturate(.85) contrast(1.05) brightness(.9);
-  transition: filter .3s ease;
+/* faint oversized rank numeral behind the title */
+.rank-ghost {
+  position: absolute; right: 10px; bottom: -18px; z-index: 0; pointer-events: none;
+  font-family: var(--blackletter); font-size: 7.5rem; line-height: 1;
+  color: rgba(232, 220, 196, .045);
 }
-.card:hover .cover img { filter: none; }
-.cover-fallback {
-  position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; align-items: center;
-  gap: 10px; padding: 14px; text-align: center;
-  background:
-    radial-gradient(circle at 50% 35%, rgba(158,27,34,.35), transparent 60%),
-    linear-gradient(160deg, #2a1215, #0b0607);
-  border: 6px double #3a2125;
-}
-.cf-title { font-family: var(--display); font-size: 1.05rem; line-height: 1.2; color: var(--bone); }
-.cf-author { font-style: italic; font-size: .9rem; color: var(--bone-dim); }
-.rec-cover .cf-title { font-size: .8rem; }
-.rec-cover .cf-author { font-size: .72rem; }
-.has-cover .cover-fallback { visibility: hidden; }
-.rank {
-  position: absolute; top: 8px; left: 8px; z-index: 2;
-  font-family: var(--display); font-size: .85rem; padding: 2px 8px;
-  background: rgba(10, 6, 7, .85); border: 1px solid var(--blood); color: var(--bone); border-radius: 2px;
-}
-.card.is-read .cover::after {
-  content: "Survived"; position: absolute; right: -34px; top: 18px; z-index: 2;
-  transform: rotate(45deg); padding: 3px 40px;
-  font-family: var(--display); font-size: .7rem; letter-spacing: .12em;
+.card.is-read::after {
+  content: "Survived"; position: absolute; right: -36px; top: 16px; z-index: 2;
+  transform: rotate(45deg); padding: 3px 42px;
+  font-family: var(--display); font-size: .68rem; letter-spacing: .12em;
   background: var(--blood); color: var(--bone); box-shadow: 0 2px 8px #000;
 }
 
-.card-body { padding: 14px 14px 16px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
-.card .title { font-family: var(--display); font-size: 1.05rem; margin: 0; line-height: 1.25; }
-.card .meta { margin: 0; color: var(--ash); font-style: italic; font-size: 1rem; }
-.tags { list-style: none; padding: 0; margin: 2px 0 6px; display: flex; flex-wrap: wrap; gap: 4px; }
-.tags li {
-  font-size: .78rem; letter-spacing: .04em; padding: 1px 7px;
-  border: 1px solid var(--line); border-radius: 10px; color: var(--bone-dim); text-transform: lowercase;
+.card-body { position: relative; z-index: 1; padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 4px; flex: 1; }
+.card-head {
+  margin: 0 0 2px; display: flex; gap: 10px; align-items: baseline;
+  font-family: var(--display); font-size: .8rem; letter-spacing: .12em; color: var(--ash);
 }
-.card-actions { margin-top: auto; display: flex; flex-direction: column; gap: 8px; }
+.card-head .rank { color: var(--blood-bright); font-weight: 700; }
+.card .title {
+  font-family: var(--display); font-weight: 700; margin: 0; padding-right: 28px;
+  font-size: clamp(1.3rem, 2.2vw, 1.6rem); line-height: 1.15; letter-spacing: .01em;
+  color: var(--bone); text-wrap: balance;
+  text-shadow: 0 0 14px rgba(212, 49, 59, .25), 0 2px 6px #000;
+  transition: color .25s ease, text-shadow .25s ease;
+}
+.card:hover .title { color: #fff4e0; text-shadow: 0 0 18px rgba(212, 49, 59, .55), 0 2px 6px #000; }
+.card .author { margin: 2px 0 0; color: var(--bone-dim); font-style: italic; font-size: 1.05rem; }
+.card .author::before { content: "by "; color: var(--ash); }
+.tags { list-style: none; padding: 0; margin: 8px 0 10px; display: flex; flex-wrap: wrap; gap: 4px; }
+.tags li {
+  font-size: .76rem; letter-spacing: .04em; padding: 0 7px;
+  border: 1px solid var(--line); border-radius: 10px; color: var(--ash); text-transform: lowercase;
+}
+.card-actions {
+  margin-top: auto; padding-top: 10px; border-top: 1px solid var(--line);
+  display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 6px 12px;
+}
 
 /* read toggle */
 .read-toggle { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; user-select: none; }
@@ -291,17 +292,17 @@ h2 {
 /* ---------- responsive ---------- */
 @media (max-width: 760px) {
   .tally { grid-template-columns: repeat(2, 1fr); }
-  .controls { grid-template-columns: 1fr 1fr; }
+  .controls { grid-template-columns: repeat(3, 1fr); }
   .controls .search { grid-column: 1 / -1; }
   .recs { grid-template-columns: 1fr; }
 }
 @media (max-width: 480px) {
   body { font-size: 1.05rem; }
-  .grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
-  .card-body { padding: 10px; }
-  .card .title { font-size: .92rem; }
-  .tags li { font-size: .7rem; }
-  .rating label { font-size: 1.3rem; }
-  .rec { grid-template-columns: 84px 1fr; padding: 12px; }
+  .grid { grid-template-columns: 1fr; }
+  .card-body { padding: 14px 14px 16px; }
+  .rec { padding: 14px 16px; }
   .oracle { padding: 20px 14px; }
+  .controls { gap: 6px; }
+  .field input, .field select { font-size: .95rem; padding: 8px 10px; }
+  .field select { padding-right: 26px; background-position: calc(100% - 14px) 55%, calc(100% - 9px) 55%; }
 }

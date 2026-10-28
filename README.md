@@ -27,9 +27,8 @@ To run it locally, serve the folder with any static server, for example `python3
 | `css/style.css` | Gothic theme |
 | `js/books.js` | The Hundred and the deeper-cuts pool, with theme tags |
 | `js/recommender.js` | Taste profile and recommendation scoring |
-| `js/app.js` | Tracking, filtering, saving, cover lookup, and rendering |
+| `js/app.js` | Tracking, filtering, saving, and rendering |
 
 ## Notes
 
 - The list was compiled from Goodreads' Best Horror Novels list. That list is voted on continually, so its order shifts over time. Edit `js/books.js` to update it.
-- Covers load as you scroll, from [Open Library](https://openlibrary.org) first and [Google Books](https://books.google.com) as a fallback, and are remembered in your browser so each is looked up only once. If neither has a cover, a styled title card is shown instead, and the lookup is retried a few days later.
