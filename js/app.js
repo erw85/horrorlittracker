@@ -282,10 +282,10 @@
 
   // ---------- grimoire: export / import / reset ----------
   $("export").addEventListener("click", () => {
-    const blob = new Blob([JSON.stringify({ app: "survived", version: 1, ...state }, null, 2)], { type: "application/json" });
+    const blob = new Blob([JSON.stringify({ app: "to-dread-list", version: 1, ...state }, null, 2)], { type: "application/json" });
     const a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
-    a.download = "survived-ledger.json";
+    a.download = "to-dread-list.json";
     a.click();
     setTimeout(() => URL.revokeObjectURL(a.href), 1000);
   });
@@ -299,7 +299,7 @@
       TOP.forEach(b => syncCard(b.id));
       refresh();
       toast("It's alive! Your progress is back.");
-    }).catch(() => toast("Hmm, that file isn't a Survived save."))
+    }).catch(() => toast("Hmm, that file isn't a To-Dread List save."))
       .finally(() => (e.target.value = ""));
   });
 

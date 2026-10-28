@@ -74,7 +74,7 @@ main { max-width: 1240px; margin: 0 auto; padding: 0 16px 48px; }
 .masthead h1 {
   position: relative; display: inline-block; margin: 0;
   font-family: var(--spook); font-weight: 400; letter-spacing: .04em;
-  font-size: clamp(3.6rem, 13vw, 7.5rem); line-height: 1;
+  font-size: clamp(2.2rem, 8.6vw, 5.6rem); line-height: 1; white-space: nowrap;
   color: var(--slime);
   text-shadow: 4px 4px 0 var(--ink), 0 0 30px rgba(139, 227, 58, .45);
 }

@@ -1,4 +1,4 @@
-# Survived
+# The To-Dread List
 
 A playful, spooky tracker and recommender for horror novels. It runs entirely in the browser, so it works on GitHub Pages with no build step.
 
