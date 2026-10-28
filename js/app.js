@@ -2,7 +2,7 @@
   "use strict";
 
   const STORE_KEY = "crypt-ledger:v1";
-  const COVER_KEY = "crypt-ledger:covers:v1";
+  const COVER_KEY = "crypt-ledger:covers:v2";
   const TOP = window.HORROR_BOOKS;
   const ALL = [...TOP, ...window.HORROR_EXTRA];
   const BY_ID = Object.fromEntries(ALL.map(b => [b.id, b]));
@@ -131,9 +131,11 @@
     fs.querySelector(".rating-clear").hidden = !(read && entry.rating);
   }
 
-  // ---------- covers (Open Library, lazy, cached) ----------
-  const coverCache = load(COVER_KEY, {});
+  // ---------- covers (Open Library, then Google Books; lazy and cached) ----------
+  const MISS_RETRY_MS = 3 * 24 * 60 * 60 * 1000;
+  const coverCache = load(COVER_KEY, {});   // { bookId: { src: url|null, t: timestamp } }
   const coverQueue = [];
+  const coverPending = new Set();
   let coverActive = 0;
 
   const coverObserver = "IntersectionObserver" in window
@@ -143,41 +145,110 @@
           coverObserver.unobserve(e.target);
           requestCover(e.target);
         });
-      }, { rootMargin: "300px" })
+      }, { rootMargin: "400px" })
     : { observe: n => requestCover(n), unobserve() {} };
 
-  function applyCover(node, coverId) {
-    if (!coverId) return;
+  function applyCover(node, src) {
+    if (!src) return;
     const img = node.querySelector(".cover img");
+    if (!img || img.dataset.src === src) return;
+    img.dataset.src = src;
+    img.referrerPolicy = "no-referrer";
+    img.alt = `Cover of ${BY_ID[node.dataset.id].title}`;
     img.onload = () => { img.hidden = false; node.classList.add("has-cover"); };
-    img.src = `https://covers.openlibrary.org/b/id/${coverId}-M.jpg`;
+    img.onerror = () => { img.hidden = true; node.classList.remove("has-cover"); };
+    img.src = src;
+  }
+
+  function applyEverywhere(id) {
+    const entry = coverCache[id];
+    document.querySelectorAll(`[data-id="${id}"]`).forEach(n => applyCover(n, entry && entry.src));
   }
 
   function requestCover(node) {
     const id = node.dataset.id;
-    if (id in coverCache) return applyCover(node, coverCache[id]);
-    coverQueue.push(node);
+    const entry = coverCache[id];
+    if (entry && (entry.src || Date.now() - entry.t < MISS_RETRY_MS)) return applyCover(node, entry.src);
+    if (coverPending.has(id)) return;
+    coverPending.add(id);
+    coverQueue.push(id);
     pumpCovers();
   }
 
   function pumpCovers() {
     while (coverActive < 4 && coverQueue.length) {
-      const node = coverQueue.shift();
-      const book = BY_ID[node.dataset.id];
+      const id = coverQueue.shift();
       coverActive++;
-      const author = book.author.split("&")[0].trim();
-      const url = `https://openlibrary.org/search.json?title=${encodeURIComponent(book.title)}&author=${encodeURIComponent(author)}&limit=5&fields=cover_i`;
-      fetch(url)
-        .then(r => (r.ok ? r.json() : Promise.reject(r.status)))
-        .then(data => {
-          const hit = (data.docs || []).find(d => d.cover_i);
-          coverCache[book.id] = hit ? hit.cover_i : null;
+      findCover(BY_ID[id])
+        .then(src => {
+          coverCache[id] = { src, t: Date.now() };
           save(COVER_KEY, coverCache);
-          document.querySelectorAll(`[data-id="${book.id}"]`).forEach(n => applyCover(n, coverCache[book.id]));
+          applyEverywhere(id);
         })
-        .catch(() => { /* keep the typographic fallback */ })
-        .finally(() => { coverActive--; pumpCovers(); });
+        .catch(() => { /* network trouble: keep the title card, try again next visit */ })
+        .finally(() => { coverPending.delete(id); coverActive--; pumpCovers(); });
     }
+  }
+
+  const normTitle = t => t.toLowerCase()
+    .replace(/[\u2018\u2019']/g, "")
+    .replace(/[^a-z0-9]+/g, " ")
+    .replace(/^(the|a|an) /, "")
+    .trim();
+  const firstAuthor = a => a.split("&")[0].trim();
+  const lastName = a => firstAuthor(a).split(" ").pop();
+
+  // Try each source in turn; a source "wins" only if its image actually loads.
+  async function findCover(book) {
+    let networkOk = false;
+    for (const source of [openLibraryCover, googleBooksCover]) {
+      try {
+        const src = await source(book);
+        networkOk = true;
+        if (src && await imageLoads(src)) return src;
+      } catch { /* try the next source */ }
+    }
+    if (!networkOk) throw new Error("offline");
+    return null;
+  }
+
+  async function openLibraryCover(book) {
+    const url = "https://openlibrary.org/search.json?" + new URLSearchParams({
+      title: book.title, author: firstAuthor(book.author), limit: "10", fields: "title,cover_i,edition_count"
+    });
+    const r = await fetch(url);
+    if (!r.ok) throw new Error(r.status);
+    const docs = ((await r.json()).docs || []).filter(d => d.cover_i);
+    const want = normTitle(book.title);
+    const exact = docs.filter(d => normTitle(d.title || "") === want)
+      .sort((a, b) => (b.edition_count || 0) - (a.edition_count || 0));
+    const hit = exact[0] || docs[0];
+    return hit ? `https://covers.openlibrary.org/b/id/${hit.cover_i}-M.jpg?default=false` : null;
+  }
+
+  async function googleBooksCover(book) {
+    const q = `intitle:"${book.title.replace(/"/g, "")}" inauthor:${lastName(book.author)}`;
+    const url = "https://www.googleapis.com/books/v1/volumes?" + new URLSearchParams({
+      q, maxResults: "10", printType: "books", fields: "items(volumeInfo(title,imageLinks))"
+    });
+    const r = await fetch(url);
+    if (!r.ok) throw new Error(r.status);
+    const items = ((await r.json()).items || []).map(i => i.volumeInfo).filter(v => v.imageLinks);
+    const want = normTitle(book.title);
+    const hit = items.find(v => normTitle(v.title || "") === want) || items[0];
+    if (!hit) return null;
+    const link = hit.imageLinks.thumbnail || hit.imageLinks.smallThumbnail;
+    return link.replace(/^http:/, "https:").replace("&edge=curl", "");
+  }
+
+  function imageLoads(src) {
+    return new Promise(resolve => {
+      const img = new Image();
+      img.referrerPolicy = "no-referrer";
+      img.onload = () => resolve(img.naturalWidth > 10 && img.naturalHeight > 10);
+      img.onerror = () => resolve(false);
+      img.src = src;
+    });
   }
 
   // ---------- catalogue rendering ----------
@@ -212,7 +283,6 @@
       ? "Showing all 100 tomes"
       : `Showing ${visible.length} of 100 tomes`;
   }
-  const lastName = a => a.split("&")[0].trim().split(" ").pop();
 
   [searchEl, statusEl, tagEl, sortEl].forEach(el => el.addEventListener("input", applyFilters));
 
