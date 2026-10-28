@@ -38,7 +38,7 @@
   }
 
   /**
-   * @param {Array} allBooks   every book (top 100 + extra pool)
+   * @param {Array} allBooks   every book, listed or not
    * @param {Object} reads     { bookId: { rating: 1-5 | 0 } }
    * @param {Set} dismissed    ids the reader waved away
    * @param {number} count     how many to return

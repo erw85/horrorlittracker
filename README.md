@@ -2,9 +2,9 @@
 
 A playful, spooky tracker and recommender for horror novels. It runs entirely in the browser, so it works on GitHub Pages with no build step.
 
-- **The Spooky Stacks**: 147 horror novels from four collections. Search, filter by collection or theme, sort, mark what you've read and rate it from 1 to 5 pumpkins.
-  - **Spooky Hundred**: the 100 top-ranked novels on Goodreads' [Best Horror Novels](https://www.goodreads.com/list/show/135.Best_Horror_Novels) list (readers' favorites).
-  - **Award winners**: Bram Stoker Award winners for best novel and best first novel, Shirley Jackson Award winners for best novel, and Goodreads Choice Award horror winners.
+- **The Spooky Stacks**: 169 horror novels from four collections. Search, filter by collection or theme, sort, mark what you've read and rate it from 1 to 5 pumpkins.
+  - **Spooky Hundred**: the 100 top-ranked novels on Goodreads' [Best Horror Novels](https://www.goodreads.com/list/show/135.Best_Horror_Novels) list (readers' favorites), with their Goodreads average ratings. Three self-promoted entries with under 1,000 ratings are left out, so the hundred runs to rank 103.
+  - **Award winners**: Bram Stoker Award winners for best novel and best first novel, Shirley Jackson Award winners for best novel, and Goodreads Choice Award horror winners (2011–2025).
   - **Classic canon**: landmark gothic and early horror novels often cited in critical histories of the genre.
   Books in more than one collection carry a badge for each.
 - **The Crystal Ball**: recommends 3 novels you haven't read yet, based on your ratings, and says why it picked each one. Picks come from unread books in the list and a pool of about 40 "deeper cuts" beyond it. Wave one away with "Not for me" and another takes its place.
@@ -35,4 +35,6 @@ To run it locally, serve the folder with any static server, for example `python3
 
 ## Notes
 
-- The lists were compiled from memory, not fetched live, so ranks, award years, and a few entries may be off. Award lists cover the years I was confident about and skip the rest. Goodreads' list is also voted on continually, so its order shifts over time. Edit `js/books.js` to correct or extend anything.
+- The Goodreads ranks, ratings, first-published years and Choice Award winners were checked on goodreads.com on October 28, 2026. Goodreads' list is voted on continually, so its order will drift.
+- The Bram Stoker and Shirley Jackson award winners and the classic canon were compiled from memory and haven't been checked against the awards' own sites yet; years I was unsure of are left out.
+- Edit `js/books.js` to correct or extend anything. Book ids are permanent; `LEGACY_IDS` there keeps progress saved by earlier versions working.

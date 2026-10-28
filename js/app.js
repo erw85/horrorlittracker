@@ -2,7 +2,8 @@
   "use strict";
 
   const STORE_KEY = "crypt-ledger:v1";
-  const ALL = [...window.HORROR_BOOKS, ...window.HORROR_ADDED, ...window.HORROR_EXTRA];
+  const ALL = window.HORROR_ALL;
+  const LEGACY = window.HORROR_LEGACY_IDS || {};
   const CATALOGUE = ALL.filter(b => b.listed);   // what the page lists; extras only feed recommendations
   const TOTAL = CATALOGUE.length;
   const BY_ID = Object.fromEntries(ALL.map(b => [b.id, b]));
@@ -38,12 +39,13 @@
   function sanitize(s) {
     const out = { reads: {}, dismissed: [] };
     if (s && typeof s === "object") {
-      for (const [id, e] of Object.entries(s.reads || {})) {
+      for (const [rawId, e] of Object.entries(s.reads || {})) {
+        const id = LEGACY[rawId] || rawId;   // ids from earlier versions
         if (!BY_ID[id]) continue;
         const r = Number(e && e.rating) || 0;
         out.reads[id] = { rating: r >= 1 && r <= 5 ? Math.round(r) : 0 };
       }
-      if (Array.isArray(s.dismissed)) out.dismissed = s.dismissed.filter(id => BY_ID[id]);
+      if (Array.isArray(s.dismissed)) out.dismissed = s.dismissed.map(id => LEGACY[id] || id).filter(id => BY_ID[id]);
     }
     return out;
   }
@@ -88,6 +90,13 @@
       } else rankEl.remove();
     }
     setText(node, ".rank-ghost", book.rank || "");
+    const grEl = node.querySelector(".gr-rating");
+    if (grEl) {
+      if (book.gr) {
+        grEl.textContent = `★ ${book.gr.avg.toFixed(2)}`;
+        grEl.title = `${book.gr.avg.toFixed(2)} average from ${book.gr.ratings.toLocaleString()} Goodreads ratings`;
+      } else grEl.remove();
+    }
     const badges = node.querySelector(".badges");
     if (badges) {
       extraSources(book).forEach(src => {

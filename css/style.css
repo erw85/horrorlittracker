@@ -273,6 +273,7 @@ h2 {
   margin: 0 0 2px; display: flex; gap: 8px; align-items: center;
   font-family: var(--round); font-weight: 600; font-size: .85rem; color: var(--muted);
 }
+.card-head .gr-rating { color: #ffd84a; cursor: help; }
 .card-head .rank {
   padding: 1px 9px; border-radius: 99px; background: var(--pumpkin); color: var(--ink); font-weight: 700;
 }
