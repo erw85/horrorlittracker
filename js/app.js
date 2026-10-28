@@ -55,16 +55,20 @@
   });
 
   // ---------- cards ----------
+  function setText(root, sel, text) {
+    const el = root.querySelector(sel);
+    if (el) el.textContent = text;
+  }
   const cards = new Map();
 
   function buildCard(book) {
     const node = tpl.content.firstElementChild.cloneNode(true);
     node.dataset.id = book.id;
-    node.querySelector(".rank").textContent = `№ ${book.rank}`;
-    node.querySelector(".rank-ghost").textContent = book.rank;
-    node.querySelector(".title").textContent = book.title;
-    node.querySelector(".author").textContent = book.author;
-    node.querySelector(".year").textContent = book.year;
+    setText(node, ".rank", `№ ${book.rank}`);
+    setText(node, ".rank-ghost", book.rank);
+    setText(node, ".title", book.title);
+    setText(node, ".author", book.author);
+    setText(node, ".year", book.year);
     const tags = node.querySelector(".tags");
     book.tags.forEach(t => {
       const li = document.createElement("li");
@@ -134,8 +138,13 @@
   const lastName = a => a.split("&")[0].trim().split(" ").pop();
 
   // ---------- catalogue rendering ----------
-  TOP.forEach(b => grid.appendChild(buildCard(b)));
-  TOP.forEach(b => syncCard(b.id));
+  try {
+    TOP.forEach(b => grid.appendChild(buildCard(b)));
+    TOP.forEach(b => syncCard(b.id));
+  } catch (err) {
+    $("load-error").hidden = false;
+    throw err;
+  }
 
   function applyFilters() {
     const q = searchEl.value.trim().toLowerCase();

@@ -306,3 +306,8 @@ h2 {
   .field input, .field select { font-size: .95rem; padding: 8px 10px; }
   .field select { padding-right: 26px; background-position: calc(100% - 14px) 55%, calc(100% - 9px) 55%; }
 }
+
+.load-error {
+  padding: 18px 20px; border: 1px solid var(--blood); border-radius: 4px;
+  background: var(--panel); color: var(--bone); font-style: italic;
+}

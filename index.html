@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=UnifrakturMaguntia&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css?v=4">
 </head>
 <body>
   <div class="vignette" aria-hidden="true"></div>
@@ -76,6 +76,7 @@
 
       <p class="count" id="count" aria-live="polite"></p>
       <ol class="grid" id="grid"></ol>
+      <p class="load-error" id="load-error" hidden>The tomes failed to rise. Please refresh the page (on a phone, close and reopen the tab). If they still don't appear, clear this site's cached files.</p>
     </section>
 
     <section class="grimoire" aria-label="Your data">
@@ -117,8 +118,8 @@
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-  <script src="js/books.js"></script>
-  <script src="js/recommender.js"></script>
-  <script src="js/app.js"></script>
+  <script src="js/books.js?v=4"></script>
+  <script src="js/recommender.js?v=4"></script>
+  <script src="js/app.js?v=4"></script>
 </body>
 </html>
