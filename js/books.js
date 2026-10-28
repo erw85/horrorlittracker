@@ -3,8 +3,11 @@
  *
  * - Books with `gr` are the top 100 of Goodreads' "Best Horror Novels" list, checked live on
  *   goodreads.com on 2026-10-28 (rank, average rating, rating count, first-published year).
- *   Three self-promoted entries with under 1,000 ratings (ranks 39, 70 and 85) are left out,
- *   so the hundred runs to rank 103.
+ *   Left out: three self-promoted entries with under 1,000 ratings (ranks 39, 70, 85), and
+ *   books Goodreads doesn't count as horror (Horror not among their top three genres there:
+ *   Rebecca, The Island of Dr. Moreau, The Road, The Day of the Triffids, Lord of the Flies,
+ *   Jurassic Park, 11/22/63) plus the Dark Tower fantasy series. The next horror titles fill
+ *   their places, so the hundred runs to rank 117.
  * - Goodreads Choice horror winners (2011-2025) were checked on goodreads.com/choiceawards.
  * - Bram Stoker and Shirley Jackson award winners and the classic canon are compiled from
  *   memory and not yet verified; years the compiler was unsure of are left out.
@@ -57,7 +60,7 @@
     { id: "the-terror", title: "The Terror", author: "Dan Simmons", year: 2007, tags: ["historical", "survival", "monsters", "isolation"], gr: { rank: 42, avg: 4.09, ratings: 79944 } },
     { id: "the-ruins", title: "The Ruins", author: "Scott Smith", year: 2006, tags: ["survival", "creature", "isolation", "body-horror"], gr: { rank: 43, avg: 3.69, ratings: 73728 } },
     { id: "flowers-in-the-attic", title: "Flowers in the Attic", author: "V.C. Andrews", year: 1979, tags: ["gothic", "family", "psychological", "childhood"], gr: { rank: 44, avg: 3.86, ratings: 248088 } },
-    { id: "rebecca", title: "Rebecca", author: "Daphne du Maurier", year: 1938, tags: ["gothic", "psychological", "classic", "mystery", "literary"], gr: { rank: 45, avg: 4.25, ratings: 777177 } },
+    { id: "rebecca", title: "Rebecca", author: "Daphne du Maurier", year: 1938, tags: ["gothic", "psychological", "classic", "mystery", "literary"] },
     { id: "bag-of-bones", title: "Bag of Bones", author: "Stephen King", year: 1998, tags: ["ghosts", "grief", "small-town", "haunted-house"], gr: { rank: 46, avg: 3.92, ratings: 216341 } },
     { id: "the-witching-hour", title: "The Witching Hour", author: "Anne Rice", year: 1990, tags: ["witchcraft", "gothic", "family", "southern-gothic", "epic"], gr: { rank: 47, avg: 4.09, ratings: 127907 } },
     { id: "horns", title: "Horns", author: "Joe Hill", year: 2010, tags: ["demonic", "dark-fantasy", "grief", "small-town"], gr: { rank: 48, avg: 3.93, ratings: 123081 } },
@@ -71,14 +74,12 @@
     { id: "nos4a2", title: "NOS4A2", author: "Joe Hill", year: 2013, tags: ["dark-fantasy", "childhood", "family", "thriller", "epic"], gr: { rank: 56, avg: 4.07, ratings: 152481 } },
     { id: "cell", title: "Cell", author: "Stephen King", year: 2006, tags: ["zombies", "apocalyptic", "survival", "sci-fi"], gr: { rank: 57, avg: 3.65, ratings: 242476 } },
     { id: "the-dark-half", title: "The Dark Half", author: "Stephen King", year: 1989, tags: ["psychological", "thriller", "monsters"], gr: { rank: 58, avg: 3.81, ratings: 156565 } },
-    { id: "the-island-of-dr-moreau", title: "The Island of Dr. Moreau", author: "H.G. Wells", year: 1896, tags: ["classic", "sci-fi", "body-horror", "monsters", "isolation"], gr: { rank: 59, avg: 3.73, ratings: 141093 } },
     { id: "the-phantom-of-the-opera", title: "The Phantom of the Opera", author: "Gaston Leroux", year: 1910, tags: ["gothic", "classic", "mystery"], gr: { rank: 60, avg: 3.96, ratings: 292161 } },
     { id: "phantoms", title: "Phantoms", author: "Dean Koontz", year: 1983, tags: ["monsters", "small-town", "cosmic", "sci-fi"], gr: { rank: 61, avg: 3.95, ratings: 83028 } },
     { id: "the-girl-next-door", title: "The Girl Next Door", author: "Jack Ketchum", year: 1989, tags: ["extreme", "psychological", "childhood", "coming-of-age"], gr: { rank: 62, avg: 3.91, ratings: 61358 } },
     { id: "the-queen-of-the-damned", title: "The Queen of the Damned", author: "Anne Rice", year: 1988, tags: ["vampires", "dark-fantasy", "epic", "gothic"], gr: { rank: 63, avg: 3.93, ratings: 166289 } },
     { id: "the-omen", title: "The Omen", author: "David Seltzer", year: 1976, tags: ["demonic", "religious", "childhood", "family"], gr: { rank: 64, avg: 4.04, ratings: 71025 } },
     { id: "hannibal", title: "Hannibal", author: "Thomas Harris", year: 1999, tags: ["serial-killer", "thriller", "extreme"], gr: { rank: 65, avg: 3.82, ratings: 121590 } },
-    { id: "the-road", title: "The Road", author: "Cormac McCarthy", year: 2006, tags: ["apocalyptic", "survival", "literary", "family"], gr: { rank: 66, avg: 4.0, ratings: 1097347 } },
     { id: "summer-of-night", title: "Summer of Night", author: "Dan Simmons", year: 1991, tags: ["childhood", "coming-of-age", "small-town", "monsters"], gr: { rank: 67, avg: 4.05, ratings: 30721 } },
     { id: "the-stepford-wives", title: "The Stepford Wives", author: "Ira Levin", year: 1972, tags: ["psychological", "small-town", "sci-fi", "thriller"], gr: { rank: 68, avg: 3.9, ratings: 62690 } },
     { id: "haunted", title: "Haunted", author: "Chuck Palahniuk", year: 2005, tags: ["extreme", "body-horror", "isolation", "literary"], gr: { rank: 69, avg: 3.59, ratings: 113707 } },
@@ -86,28 +87,22 @@
     { id: "duma-key", title: "Duma Key", author: "Stephen King", year: 2008, tags: ["ghosts", "isolation", "psychic", "grief"], gr: { rank: 72, avg: 3.99, ratings: 142118 } },
     { id: "thinner", title: "Thinner", author: "Stephen King", year: 1984, tags: ["cursed", "body-horror", "thriller"], gr: { rank: 73, avg: 3.78, ratings: 233753 } },
     { id: "the-woman-in-black", title: "The Woman in Black", author: "Susan Hill", year: 1983, tags: ["ghosts", "gothic", "isolation", "haunted-house"], gr: { rank: 74, avg: 3.76, ratings: 87878 } },
-    { id: "the-day-of-the-triffids", title: "The Day of the Triffids", author: "John Wyndham", year: 1951, tags: ["apocalyptic", "sci-fi", "survival", "classic", "creature"], gr: { rank: 75, avg: 4.01, ratings: 121201 } },
-    { id: "lord-of-the-flies", title: "Lord of the Flies", author: "William Golding", year: 1954, tags: ["survival", "childhood", "isolation", "classic", "literary"], gr: { rank: 76, avg: 3.71, ratings: 3333510 } },
     { id: "the-other", title: "The Other", author: "Thomas Tryon", year: 1971, tags: ["psychological", "childhood", "family", "small-town"], gr: { rank: 77, avg: 3.97, ratings: 23361 } },
     { id: "carrion-comfort", title: "Carrion Comfort", author: "Dan Simmons", year: 1989, tags: ["psychic", "thriller", "epic", "historical"], gr: { rank: 78, avg: 3.91, ratings: 26908 } },
     { id: "the-girl-who-loved-tom-gordon", title: "The Girl Who Loved Tom Gordon", author: "Stephen King", year: 1999, tags: ["survival", "isolation", "childhood", "psychological"], gr: { rank: 79, avg: 3.64, ratings: 185529 } },
     { id: "lost-souls", title: "Lost Souls", author: "Poppy Z. Brite", year: 1992, tags: ["vampires", "gothic", "extreme", "southern-gothic"], gr: { rank: 80, avg: 3.9, ratings: 19439 } },
     { id: "the-keep", title: "The Keep", author: "F. Paul Wilson", year: 1981, tags: ["vampires", "historical", "dark-fantasy"], gr: { rank: 81, avg: 4.0, ratings: 20341 } },
     { id: "relic", title: "Relic", author: "Douglas Preston & Lincoln Child", year: 1995, tags: ["creature", "thriller", "mystery", "sci-fi"], gr: { rank: 82, avg: 4.05, ratings: 118636 } },
-    { id: "the-drawing-of-the-three", title: "The Drawing of the Three", author: "Stephen King", year: 1987, tags: ["dark-fantasy", "epic"], gr: { rank: 83, avg: 4.24, ratings: 302233 } },
     { id: "shadowland", title: "Shadowland", author: "Peter Straub", year: 1980, tags: ["dark-fantasy", "coming-of-age", "childhood", "literary"], gr: { rank: 84, avg: 3.88, ratings: 12986 } },
-    { id: "jurassic-park", title: "Jurassic Park", author: "Michael Crichton", year: 1990, tags: ["creature", "sci-fi", "survival", "thriller"], gr: { rank: 86, avg: 4.14, ratings: 1106106 } },
     { id: "the-great-and-secret-show", title: "The Great and Secret Show", author: "Clive Barker", year: 1989, tags: ["dark-fantasy", "cosmic", "epic", "small-town"], gr: { rank: 87, avg: 4.06, ratings: 31745 } },
     { id: "bird-box", title: "Bird Box", author: "Josh Malerman", year: 2014, tags: ["apocalyptic", "survival", "monsters", "psychological", "family"], gr: { rank: 88, avg: 4.05, ratings: 218848 } },
     { id: "the-cellar", title: "The Cellar", author: "Richard Laymon", year: 1980, tags: ["extreme", "creature", "haunted-house"], gr: { rank: 89, avg: 3.62, ratings: 9063 } },
     { id: "black-house", title: "Black House", author: "Stephen King", year: 2001, tags: ["serial-killer", "dark-fantasy", "small-town", "mystery"], gr: { rank: 90, avg: 4.06, ratings: 74102 } },
-    { id: "the-waste-lands", title: "The Waste Lands", author: "Stephen King", year: 1991, tags: ["dark-fantasy", "epic", "apocalyptic"], gr: { rank: 91, avg: 4.25, ratings: 257198 } },
     { id: "odd-thomas", title: "Odd Thomas", author: "Dean Koontz", year: 2003, tags: ["ghosts", "psychic", "mystery", "humor", "small-town"], gr: { rank: 92, avg: 4.0, ratings: 279341 } },
     { id: "weaveworld", title: "Weaveworld", author: "Clive Barker", year: 1987, tags: ["dark-fantasy", "epic"], gr: { rank: 93, avg: 4.13, ratings: 35002 } },
     { id: "the-house-next-door", title: "The House Next Door", author: "Anne Rivers Siddons", year: 1978, tags: ["haunted-house", "psychological", "southern-gothic"], gr: { rank: 94, avg: 3.89, ratings: 14983 } },
     { id: "harvest-home", title: "Harvest Home", author: "Thomas Tryon", year: 1973, tags: ["folk-horror", "cult", "small-town", "witchcraft"], gr: { rank: 95, avg: 3.8, ratings: 11999 } },
     { id: "the-troop", title: "The Troop", author: "Nick Cutter", year: 2014, tags: ["body-horror", "survival", "isolation", "coming-of-age", "extreme"], gr: { rank: 96, avg: 3.82, ratings: 145527 } },
-    { id: "11-22-63", title: "11/22/63", author: "Stephen King", year: 2011, tags: ["historical", "sci-fi", "literary"], gr: { rank: 97, avg: 4.35, ratings: 716486 } },
     { id: "the-damnation-game", title: "The Damnation Game", author: "Clive Barker", year: 1985, tags: ["demonic", "extreme", "dark-fantasy"], gr: { rank: 98, avg: 3.81, ratings: 21752 } },
     { id: "the-rats", title: "The Rats", author: "James Herbert", year: 1974, tags: ["creature", "apocalyptic", "extreme", "survival"], gr: { rank: 99, avg: 3.91, ratings: 27308 } },
     { id: "the-bad-place", title: "The Bad Place", author: "Dean Koontz", year: 1990, tags: ["thriller", "psychic", "family", "monsters"], gr: { rank: 100, avg: 3.94, ratings: 39150 } },
@@ -121,7 +116,7 @@
     { id: "the-institute", title: "The Institute", author: "Stephen King", year: 2019, tags: ["psychic", "childhood", "thriller", "sci-fi"] },
     { id: "boys-life", title: "Boy's Life", author: "Robert McCammon", year: 1991, tags: ["coming-of-age", "small-town", "mystery", "literary"] },
     { id: "the-hellbound-heart", title: "The Hellbound Heart", author: "Clive Barker", year: 1986, tags: ["demonic", "body-horror", "extreme"] },
-    { id: "off-season", title: "Off Season", author: "Jack Ketchum", year: 1980, tags: ["extreme", "survival", "body-horror"] },
+    { id: "off-season", title: "Off Season", author: "Jack Ketchum", year: 1980, tags: ["extreme", "survival", "body-horror"], gr: { rank: 112, avg: 3.74, ratings: 21590 } },
     { id: "the-little-stranger", title: "The Little Stranger", author: "Sarah Waters", year: 2009, tags: ["haunted-house", "historical", "literary", "psychological"] },
     { id: "dark-matter", title: "Dark Matter", author: "Michelle Paver", year: 2010, tags: ["ghosts", "isolation", "historical", "survival"] },
     { id: "the-historian", title: "The Historian", author: "Elizabeth Kostova", year: 2005, tags: ["vampires", "historical", "mystery", "literary"] },
@@ -159,7 +154,7 @@
     { id: "zombie", title: "Zombie", author: "Joyce Carol Oates", year: 1995, tags: ["serial-killer", "psychological", "literary", "extreme"] },
     { id: "children-of-the-dusk", title: "Children of the Dusk", author: "Janet Berliner & George Guthridge", year: 1997, tags: ["dark-fantasy", "historical", "epic"] },
     { id: "mr-x", title: "Mr. X", author: "Peter Straub", year: 1999, tags: ["cosmic", "family", "mystery", "literary"] },
-    { id: "the-traveling-vampire-show", title: "The Traveling Vampire Show", author: "Richard Laymon", year: 2000, tags: ["vampires", "coming-of-age", "small-town"] },
+    { id: "the-traveling-vampire-show", title: "The Traveling Vampire Show", author: "Richard Laymon", year: 2000, tags: ["vampires", "coming-of-age", "small-town"], gr: { rank: 104, avg: 3.81, ratings: 9798 } },
     { id: "american-gods", title: "American Gods", author: "Neil Gaiman", year: 2001, tags: ["dark-fantasy", "epic", "literary"] },
     { id: "the-night-class", title: "The Night Class", author: "Tom Piccirilli", year: 2002, tags: ["ghosts", "mystery", "psychological"] },
     { id: "lost-boy-lost-girl", title: "Lost Boy Lost Girl", author: "Peter Straub", year: 2003, tags: ["haunted-house", "serial-killer", "grief", "literary"] },
@@ -241,7 +236,14 @@
     { id: "saint-odd", title: "Saint Odd", author: "Dean Koontz", year: 2015, tags: ["ghosts", "psychic", "small-town", "humor"] },
     { id: "elevation", title: "Elevation", author: "Stephen King", year: 2018, tags: ["small-town", "literary", "dark-fantasy"] },
     { id: "you-like-it-darker", title: "You Like It Darker", author: "Stephen King", year: 2024, tags: ["psychological", "dark-fantasy", "thriller"] },
-    { id: "witchcraft-for-wayward-girls", title: "Witchcraft for Wayward Girls", author: "Grady Hendrix", year: 2025, tags: ["witchcraft", "coming-of-age", "historical", "humor"] }
+    { id: "witchcraft-for-wayward-girls", title: "Witchcraft for Wayward Girls", author: "Grady Hendrix", year: 2025, tags: ["witchcraft", "coming-of-age", "historical", "humor"] },
+    { id: "the-wolfs-hour", title: "The Wolf's Hour", author: "Robert McCammon", year: 1989, tags: ["werewolves", "historical", "thriller"], gr: { rank: 106, avg: 4.09, ratings: 12572 } },
+    { id: "whisper-of-death", title: "Whisper of Death", author: "Christopher Pike", year: 1991, tags: ["coming-of-age", "mystery", "apocalyptic"], gr: { rank: 107, avg: 3.81, ratings: 3683 } },
+    { id: "lightning", title: "Lightning", author: "Dean Koontz", year: 1988, tags: ["sci-fi", "thriller"], gr: { rank: 109, avg: 4.09, ratings: 66590 } },
+    { id: "strangers", title: "Strangers", author: "Dean Koontz", year: 1986, tags: ["sci-fi", "mystery", "psychological", "thriller"], gr: { rank: 110, avg: 4.02, ratings: 48448 } },
+    { id: "the-face", title: "The Face", author: "R.L. Stine", year: 1996, tags: ["coming-of-age", "mystery", "psychic"], gr: { rank: 114, avg: 3.74, ratings: 2112 } },
+    { id: "the-wrong-number", title: "The Wrong Number", author: "R.L. Stine", year: 1990, tags: ["coming-of-age", "thriller", "serial-killer"], gr: { rank: 116, avg: 3.7, ratings: 7397 } },
+    { id: "the-prom-queen", title: "The Prom Queen", author: "R.L. Stine", year: 1992, tags: ["coming-of-age", "slasher", "mystery"], gr: { rank: 117, avg: 3.71, ratings: 5980 } }
   ];
 
   // Where each book's recognition comes from, keyed by title. Years are award years.

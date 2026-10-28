@@ -3,7 +3,7 @@
 A playful, spooky tracker and recommender for horror novels. It runs entirely in the browser, so it works on GitHub Pages with no build step.
 
 - **The Spooky Stacks**: 169 horror novels from four collections. Search, filter by collection or theme, sort, mark what you've read and rate it from 1 to 5 pumpkins.
-  - **Spooky Hundred**: the 100 top-ranked novels on Goodreads' [Best Horror Novels](https://www.goodreads.com/list/show/135.Best_Horror_Novels) list (readers' favorites), with their Goodreads average ratings. Three self-promoted entries with under 1,000 ratings are left out, so the hundred runs to rank 103.
+  - **Spooky Hundred**: the 100 top-ranked novels on Goodreads' [Best Horror Novels](https://www.goodreads.com/list/show/135.Best_Horror_Novels) list (readers' favorites), with their Goodreads average ratings. Left out are three self-promoted entries with under 1,000 ratings, books Goodreads doesn't count as horror (Horror isn't among their top three genres there, such as *Lord of the Flies* and *Jurassic Park*), and the Dark Tower fantasy series. The next horror titles fill their places, so the hundred runs to rank 117.
   - **Award winners**: Bram Stoker Award winners for best novel and best first novel, Shirley Jackson Award winners for best novel, and Goodreads Choice Award horror winners (2011–2025).
   - **Classic canon**: landmark gothic and early horror novels often cited in critical histories of the genre.
   Books in more than one collection carry a badge for each.
